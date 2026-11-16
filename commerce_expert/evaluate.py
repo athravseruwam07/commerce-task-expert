@@ -89,7 +89,9 @@ def summarize(records: list[dict], variant: str) -> dict:
         else None,
         "p50_generation_ms": statistics.median(times) if times else None,
         "p95_generation_ms": percentile(times, 0.95),
-        "peak_memory_bytes": max((r.get("peak_memory_bytes", 0) or 0 for r in records), default=0),
+        "peak_memory_bytes": max(
+            (r["peak_memory_bytes"] for r in records if r.get("peak_memory_bytes") is not None), default=None
+        ),
         "slices": {
             s: {"n": len(rs), "accuracy": sum(bool(r["correct"]) for r in rs) / len(rs)}
             for s, rs in slices.items()

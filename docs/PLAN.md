@@ -25,3 +25,7 @@ Prevent test leakage by grouping all paraphrases under a pattern ID and assignin
 
 ## Definition of done
 A clean clone can build verified data and run tests without downloading weights; a Mac can reproduce training and all three model runs with documented commands. Measured results and limitations are published, demo starts, CI passes, repository is pushed, and local checkpoints remain usable. No fabricated metrics, hidden oracle demo responses, or test-driven retraining.
+
+## Implementation notes
+
+The frozen primary local experiment is a 60-case stratified pilot (15 per test slice), with 300 batch-size-1 LoRA updates (about 0.15 epoch) and fixed-40-case validation checkpoint selection. The full 240-case test remains independently runnable. An early training attempt was discarded after review found that gold-derived result-column metadata indirectly exposed the expected action. The final prompts use only schema, policy, fixed date, and question; clean training restarts from the original base. No test-model outputs were inspected before fixing this issue. `reports/discarded_training.json` preserves the audit trail.

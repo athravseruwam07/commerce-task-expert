@@ -49,12 +49,17 @@ def main():
         "",
         "All values below come from actual local MLX runs. No SQL repair or oracle substitution.",
         "",
-        "| Variant | Cases | Answer correctness | Query execution | p50 generation | p95 generation | MLX peak |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Variant | Cases | Overall correctness | Query-only correctness | Query execution | p50 generation | p95 generation | MLX peak |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for run in summary["runs"]:
+        memory_label = (
+            f"{run['peak_memory_bytes'] / 1e9:.2f} GB"
+            if run.get("peak_memory_bytes") is not None
+            else "unmeasured"
+        )
         lines.append(
-            f"| {run['variant']} | {run['n']} | {run['answer_accuracy']:.1%} | {run['query_execution_rate']:.1%} | {run['p50_generation_ms'] / 1000:.2f}s | {run['p95_generation_ms'] / 1000:.2f}s | {run['peak_memory_bytes'] / 1e9:.2f} GB |"
+            f"| {run['variant']} | {run['n']} | {run['answer_accuracy']:.1%} | {run['query_answer_accuracy']:.1%} | {run['query_execution_rate']:.1%} | {run['p50_generation_ms'] / 1000:.2f}s | {run['p95_generation_ms'] / 1000:.2f}s | {memory_label} |"
         )
     lines += [
         "",
