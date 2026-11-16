@@ -1,0 +1,12 @@
+{
+  "completed_utc": "2026-11-16T18:33:48.765204+00:00",
+  "protocol": "configs/evaluation.json",
+  "all_runs_identical_cases": true,
+  "all_runs_same_prompt_and_evaluator": true,
+  "release_restoration_byte_identical": true,
+  "base_weights_sha256": "76ae13712994dc7b28ab183410e7c6f10d1a21d4d6c21426245b5614c43672a5",
+  "adapter_archive_sha256": "1bf289cd646357955db5d549ffaaade1b8ed6095b17f90c7ca3ec45fed05f44c",
+  "code_revision_before_final_docs": "83d3bdcabae44b6cd37c8385387ba1549f391999",
+  "primary_comparison": "60 cases x 3 model variants; full 240-case test is available but not claimed measured",
+  "live_demo_oracle_match": true
+}

@@ -42,3 +42,28 @@ def test_summary_supports_evaluation_protocol():
     frame = summary_frame({"runs": [{"variant": "base", "n": 12, "answer_accuracy": .25, "slices": {"unseen_store": {}}}], "hardware": {"memory": 16}})
     assert frame.iloc[0]["variant"] == "base"
     assert "slices" not in frame.columns
+
+
+def test_renderer_does_not_claim_unexecuted_query_returned_no_rows():
+    from streamlit.testing.v1 import AppTest
+
+    source = """
+from app import show_result
+show_result({"action": None, "rows": [], "error": "Model did not return valid JSON", "execution_success": False}, replay=True)
+"""
+    app = AppTest.from_string(source).run(timeout=30)
+    assert not app.exception
+    assert any("Model did not return valid JSON" in error.value for error in app.error)
+    assert not any("query returned no rows" in caption.value for caption in app.caption)
+
+
+def test_renderer_shows_empty_rows_only_for_executed_queries():
+    from streamlit.testing.v1 import AppTest
+
+    source = """
+from app import show_result
+show_result({"action": "query", "rows": [], "error": None, "execution_success": True}, replay=True)
+"""
+    app = AppTest.from_string(source).run(timeout=30)
+    assert not app.exception
+    assert any("query returned no rows" in caption.value for caption in app.caption)

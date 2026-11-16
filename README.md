@@ -6,6 +6,8 @@ Built for an **Apple M4 MacBook Pro with 16 GB unified memory**. Training and in
 
 > **Research question:** Can supervised fine-tuning make a small commerce SQL specialist more accurate, and how much of that improvement survives quantization?
 
+**Measured status:** the 60-case pilot produced **0/60** correct answers for the original model, **8/60** for fine-tuned FP16, and **6/60** for quantized fine-tuned. Improvements were confined to familiar patterns on unseen stores; held-out compositions and clarification remained unsolved. This is a reproducible research prototype with documented model limitations.
+
 ## What is included
 
 - 20 reproducible merchant databases: products, variants, inventory, orders, order lines and partial returns.
@@ -60,7 +62,7 @@ The private GitHub release contains the selected adapter and checksums, not mult
 
 ```sh
 mkdir -p work
-gh release download v1.0.0 --pattern commerce-adapter-v1.tar.gz --dir work
+gh release download v0.1.0 --pattern commerce-adapter-v1.tar.gz --dir work
 uv sync --extra ml --extra dev --locked
 uv run commerce generate
 uv run python scripts/restore_adapter.py work/commerce-adapter-v1.tar.gz
@@ -72,6 +74,14 @@ Restoration downloads the exact pinned public base revision if needed, verifies 
 ## Results and interpretation
 
 Measured runs are saved in [reports](reports/) with one raw record per question, SQL, returned rows, expected rows, correctness, timing and errors. [RESULTS.md](reports/RESULTS.md) is generated from these records; [summary.json](reports/summary.json) contains machine-readable aggregates. Training and quantization metadata record configuration, dataset hashes, source revision, package versions and model sizes. The training search ran 300 batch-size-1 updates (about 0.15 epoch); validation selected the checkpoint at update 200 (about 0.10 epoch).
+
+| Variant | Correct / 60 | Median generation | Peak MLX memory |
+|---|---:|---:|---:|
+| Original FP16 | 0 | 6.82 s | 3.29 GB |
+| Fine-tuned FP16 | 8 | 5.07 s | 3.29 GB |
+| Quantized fine-tuned | 6 | 2.05 s | 1.31 GB |
+
+The fine-tuned model scored **53.3%** on familiar patterns with unseen stores and **0%** on both held-out-composition slices. Quantization reduced peak MLX allocations by about **60%**, while losing two correct answers. Low validation completion loss did not establish reliable free-generated SQL. Further improvement requires a stronger training/validation protocol and a fresh final test cohort; the published test results are kept unchanged.
 
 **Execution success alone is not correctness.** A valid SQL query can use the wrong dates, double-count joins, omit cancelled-order filtering, or confuse product and variant aggregation. Scoring compares actual results with independently computed expected rows, including ordering, ties, and numeric tolerance. A single global column permutation allows equivalent aliases and column order without exposing expected output columns to the model.
 
@@ -85,6 +95,8 @@ All stores share one schema. Unseen-store results therefore demonstrate transfer
 - Stockout risk: positive recent demand and available units below recent paid units / lookback days × horizon days.
 - Return/refund aggregation is at order-line level before joining to sales to avoid join fan-out.
 - Missing essential metric or period prompts clarification when the documented policy cannot resolve it.
+
+Concrete observed failures and scoring caveats are examined in [failure analysis](docs/FAILURES.md).
 
 See [dataset design](docs/DATASET.md), [end-to-end plan](docs/PLAN.md), and [demo guide](docs/DEMO.md).
 

@@ -1,0 +1,54 @@
+{
+  "action": "query",
+  "sql": "SELECT variant_id,on_hand-reserved AS available FROM inventory WHERE on_hand-reserved < 10 ORDER BY available ASC,variant_id ASC",
+  "rows": [
+    {
+      "variant_id": 11,
+      "available": 0
+    },
+    {
+      "variant_id": 22,
+      "available": 0
+    },
+    {
+      "variant_id": 33,
+      "available": 0
+    },
+    {
+      "variant_id": 44,
+      "available": 0
+    },
+    {
+      "variant_id": 24,
+      "available": 7
+    }
+  ],
+  "explanation": "variant id: 11; available: 0\nvariant id: 22; available: 0\nvariant id: 33; available: 0\nvariant id: 44; available: 0\nvariant id: 24; available: 7",
+  "error": null,
+  "clarification": null,
+  "policy": "SQLite dialect. Each database is one merchant; do not filter by store_id.\nAll dates are UTC calendar dates (YYYY-MM-DD). The as-of date is exclusive: recent N days means [as_of_date minus N days, as_of_date). Only status='paid' orders count as sales. Order item discount_cents is the total line discount, not per unit. Gross sales revenue = quantity * unit_price_cents - discount_cents, before returns, excluding tax/shipping. Net sales revenue subtracts refund_cents for returns processed before as_of_date against those order items. Available inventory = on_hand - reserved. Inventory is an as-of snapshot; restocked returns are already reflected in on_hand. Sales velocity is paid units / lookback days; do not subtract returns from demand. A stockout risk means positive recent sales and available inventory < sales_velocity * horizon_days, including already sold-out variants. This is a constant-rate estimate, not a calibrated probability. Return rate is returned units / paid units for orders in the lookback period, counting associated returns processed before as_of_date. Return units by return date instead uses returned_at in the requested period. Group by IDs as well as display names. Ties: metric descending, ID ascending unless another order is requested. Return monetary values in integer cents. Never guess an unspecified ranking metric. Queries must be read-only and reference only the supplied tables.",
+  "assumptions": {
+    "as_of_date": "2026-10-01",
+    "business_policy": "SQLite dialect. Each database is one merchant; do not filter by store_id.\nAll dates are UTC calendar dates (YYYY-MM-DD). The as-of date is exclusive: recent N days means [as_of_date minus N days, as_of_date). Only status='paid' orders count as sales. Order item discount_cents is the total line discount, not per unit. Gross sales revenue = quantity * unit_price_cents - discount_cents, before returns, excluding tax/shipping. Net sales revenue subtracts refund_cents for returns processed before as_of_date against those order items. Available inventory = on_hand - reserved. Inventory is an as-of snapshot; restocked returns are already reflected in on_hand. Sales velocity is paid units / lookback days; do not subtract returns from demand. A stockout risk means positive recent sales and available inventory < sales_velocity * horizon_days, including already sold-out variants. This is a constant-rate estimate, not a calibrated probability. Return rate is returned units / paid units for orders in the lookback period, counting associated returns processed before as_of_date. Return units by return date instead uses returned_at in the requested period. Group by IDs as well as display names. Ties: metric descending, ID ascending unless another order is requested. Return monetary values in integer cents. Never guess an unspecified ranking metric. Queries must be read-only and reference only the supplied tables."
+  },
+  "text": "{\"action\":\"query\",\"sql\":\"SELECT variant_id,on_hand-reserved AS available FROM inventory WHERE on_hand-reserved < 10 ORDER BY available ASC,variant_id ASC\"}",
+  "generation_ms": 1036.7782500106841,
+  "first_token_ms": 661.2936250166968,
+  "prompt_tokens": 637,
+  "completion_tokens": 37,
+  "peak_memory_bytes": 1264907936,
+  "active_memory_bytes": 871869448,
+  "model_load_ms": 811.7549170274287,
+  "timing": {
+    "total_ms": 2825.6828330340795,
+    "generation_ms": 1036.7782500106841,
+    "first_token_ms": 661.2936250166968,
+    "peak_memory_bytes": 1264907936,
+    "prompt_tokens": 637,
+    "completion_tokens": 37
+  },
+  "question": "Which variants have fewer than 10 available units? Sort by available stock ascending.",
+  "store_id": "store_17",
+  "variant": "quantized",
+  "independent_oracle_match": true
+}

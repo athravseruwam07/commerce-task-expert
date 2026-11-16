@@ -88,7 +88,7 @@ def show_result(result: dict, *, replay: bool = False) -> None:
     if action == "clarify":
         st.info(result.get("clarification") or result.get("question") or "The model requested clarification.")
     if result.get("explanation"):
-        st.markdown(result["explanation"])
+        st.markdown(result["explanation"].replace("\n", "  \n"))
         st.caption("Explanation is rendered from returned data; the trained model generates the query or clarification.")
     timing = result.get("timing", {})
     if not timing:
@@ -100,8 +100,9 @@ def show_result(result: dict, *, replay: bool = False) -> None:
             st.json(timing)
     if result.get("sql"):
         st.markdown("**Generated SQL**")
-        st.code(result["sql"], language="sql")
-    if "rows" in result and result["rows"] is not None:
+        st.code(result["sql"], language="sql", wrap_lines=True)
+    query_executed = bool(result.get("execution_success")) if replay else (result.get("action") == "query" and not result.get("error"))
+    if query_executed and "rows" in result and result["rows"] is not None:
         st.markdown("**Returned data**")
         rows = result["rows"]
         if rows:
@@ -119,7 +120,7 @@ def show_result(result: dict, *, replay: bool = False) -> None:
 def main() -> None:
     st.set_page_config(page_title="Stockroom · Commerce Task Expert", page_icon="◈", layout="wide")
     st.markdown("""<style>
-    html, body, [class*="css"], [class*="st-"] {font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+    html, body, .stApp {font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
     .stApp {background:#101713;color:#e5ece7;}
     [data-testid="stSidebar"] {background:#151f19;border-right:1px solid #26382c;}
     .block-container {max-width:1260px;padding-top:2.7rem;}
@@ -140,8 +141,9 @@ def main() -> None:
         st.markdown("## ◈ Stockroom")
         st.caption("COMMERCE TASK EXPERT")
         st.divider()
-        data_dir = Path(st.text_input("Dataset directory", str(ROOT / "data" / "generated"))).expanduser()
-        models_dir = Path(st.text_input("Models directory", str(ROOT / "models"))).expanduser()
+        with st.expander("Local files", expanded=False):
+            data_dir = Path(st.text_input("Dataset directory", str(ROOT / "data" / "generated"))).expanduser()
+            models_dir = Path(st.text_input("Models directory", str(ROOT / "models"))).expanduser()
         stores = available_stores(data_dir)
         store_id = st.selectbox("Merchant database", stores) if stores else None
         variant = st.selectbox("Model variant", list(VARIANTS), format_func=VARIANTS.get)
@@ -190,9 +192,10 @@ def main() -> None:
                 filenames = sorted({r["_record_file"] for r in records})
                 filename = st.selectbox("Experiment run", filenames)
                 filtered = [r for r in records if r["_record_file"] == filename]
-                index = st.selectbox("Recorded question", range(len(filtered)), format_func=lambda i: record_question(filtered[i]))
+                index = st.selectbox("Recorded question", range(len(filtered)), format_func=lambda i: record_question(filtered[i]), key=f"replay_question_{filename}")
                 record = filtered[index]
                 st.markdown(f"**{record_question(record)}**")
+                st.caption(f"RECORDED CONTEXT · {record.get('store_id', 'unknown store')} · {record.get('variant', filename)} · {record.get('case_id', '')}")
                 show_result(record, replay=True)
     with experiments:
         st.subheader("Same questions. Three model variants.")
