@@ -66,3 +66,14 @@ def test_parse():
 def test_comparison_accepts_equivalent_sql_numeric_types():
     assert rows_equal([{"n": 1.0, "rate": 0.333333333}], [{"n": 1, "rate": 0.333333}])
     assert not rows_equal([{"n": 1.01}], [{"n": 1}])
+
+
+def test_semantic_column_permutation():
+    from commerce_expert.query import results_equivalent
+
+    expected = [{"variant_id": 1, "units": 20}, {"variant_id": 2, "units": 30}]
+    assert results_equivalent([{"sold": 20, "id": 1}, {"sold": 30, "id": 2}], expected, ordered=True)
+    assert not results_equivalent([{"sold": 1, "id": 20}, {"sold": 30, "id": 2}], expected, ordered=True)
+    assert not results_equivalent([{"id": 2, "sold": 30}, {"id": 1, "sold": 20}], expected, ordered=True)
+    assert results_equivalent([{"id": 2, "sold": 30}, {"id": 1, "sold": 20}], expected, ordered=False)
+    assert not results_equivalent([{"id": 1}], expected[:1])

@@ -107,7 +107,7 @@ def main():
         "- Small finite pattern library and templated wording limit the breadth of the claim.",
         "- One training seed and one local machine; no universal speed or quality claim.",
         "- Stock risk is constant recent-sales velocity, not a probabilistic forecast; inventory-censored demand is not corrected.",
-        "- Exact output aliases are supplied as an evaluation contract; the live demo lets the model choose aliases.",
+        "- Result comparison allows a global column permutation and renaming; expected columns never enter model inputs.",
         "- The explanation is deterministic evidence rendering; the learned component chooses query or clarification.",
         "- Test outputs must not be used to tune the published model or prompt.",
     ]

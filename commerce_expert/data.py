@@ -1,4 +1,5 @@
 """Deterministic synthetic merchant stores. All prices use integer cents."""
+
 from __future__ import annotations
 
 import random
@@ -76,8 +77,16 @@ def create_store(path: Path, seed: int, store_id: str, tiny: bool = False) -> di
                 when_returned = date.fromisoformat(when) + timedelta(days=rng.randint(1, 30))
                 if when_returned < as_of:
                     refund = ((price * qty - discount) * returned) // qty
-                    returns.append((len(returns) + 1, iid, when_returned.isoformat(), returned, refund,
-                                    int(rng.random() < 0.8)))
+                    returns.append(
+                        (
+                            len(returns) + 1,
+                            iid,
+                            when_returned.isoformat(),
+                            returned,
+                            refund,
+                            int(rng.random() < 0.8),
+                        )
+                    )
     # Boundary fixtures: first included day, exclusive as-of day, cancelled high revenue,
     # two separate partial returns for a single line (exposes join fan-out bugs).
     for days_ago, status in [(7, "paid"), (0, "paid"), (1, "cancelled")]:
@@ -87,8 +96,9 @@ def create_store(path: Path, seed: int, store_id: str, tiny: bool = False) -> di
         items.append((iid, oid, 1, 5, 1234, 123))
         if days_ago == 7:
             for returned_ago in (3, 1):
-                returns.append((len(returns) + 1, iid, (as_of - timedelta(days=returned_ago)).isoformat(),
-                                1, 1209, 1))
+                returns.append(
+                    (len(returns) + 1, iid, (as_of - timedelta(days=returned_ago)).isoformat(), 1, 1209, 1)
+                )
     with sqlite3.connect(path) as db:
         db.executescript(SCHEMA)
         db.executemany("INSERT INTO products VALUES (?,?,?)", products)
@@ -97,16 +107,27 @@ def create_store(path: Path, seed: int, store_id: str, tiny: bool = False) -> di
         db.executemany("INSERT INTO orders VALUES (?,?,?)", orders)
         db.executemany("INSERT INTO order_items VALUES (?,?,?,?,?,?)", items)
         db.executemany("INSERT INTO returns VALUES (?,?,?,?,?,?)", returns)
-        db.executescript("CREATE INDEX idx_orders_date ON orders(created_at); "
-                         "CREATE INDEX idx_items_variant ON order_items(variant_id); "
-                         "CREATE INDEX idx_returns_item ON returns(item_id);")
-    return {"store_id": store_id, "seed": seed, "products": len(products), "variants": len(variants),
-            "orders": len(orders), "items": len(items), "returns": len(returns)}
+        db.executescript(
+            "CREATE INDEX idx_orders_date ON orders(created_at); "
+            "CREATE INDEX idx_items_variant ON order_items(variant_id); "
+            "CREATE INDEX idx_returns_item ON returns(item_id);"
+        )
+    return {
+        "store_id": store_id,
+        "seed": seed,
+        "products": len(products),
+        "variants": len(variants),
+        "orders": len(orders),
+        "items": len(items),
+        "returns": len(returns),
+    }
 
 
 def load_records(path: Path) -> dict[str, list[dict]]:
     """The oracle reads records, then computes using Python without aggregate SQL."""
     with sqlite3.connect(path) as db:
         db.row_factory = sqlite3.Row
-        return {table: [dict(row) for row in db.execute(f"SELECT * FROM {table}")]
-                for table in ("products", "variants", "inventory", "orders", "order_items", "returns")}
+        return {
+            table: [dict(row) for row in db.execute(f"SELECT * FROM {table}")]
+            for table in ("products", "variants", "inventory", "orders", "order_items", "returns")
+        }

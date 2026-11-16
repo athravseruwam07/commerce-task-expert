@@ -56,7 +56,7 @@ uv run commerce ask "Which variants will run out within 7 days based on paid uni
 
 Measured runs are saved in [reports](reports/) with one raw record per question, SQL, returned rows, expected rows, correctness, timing and errors. [RESULTS.md](reports/RESULTS.md) is generated from these records; [summary.json](reports/summary.json) contains machine-readable aggregates. Training and quantization metadata record configuration, dataset hashes, source revision, package versions and model sizes.
 
-**Execution success alone is not correctness.** A valid SQL query can use the wrong dates, double-count joins, omit cancelled-order filtering, or confuse product and variant aggregation. Scoring compares actual results with independently computed expected rows, including ordering, ties, result aliases and numeric tolerance. The prompt supplies output aliases as an evaluation contract; free-form live inference chooses its own aliases.
+**Execution success alone is not correctness.** A valid SQL query can use the wrong dates, double-count joins, omit cancelled-order filtering, or confuse product and variant aggregation. Scoring compares actual results with independently computed expected rows, including ordering, ties, and numeric tolerance. A single global column permutation allows equivalent aliases and column order without exposing expected output columns to the model.
 
 All stores share one schema. Unseen-store results therefore demonstrate transfer across data distributions, not arbitrary schema generalization. A finite set of synthetic patterns and one training seed limit broader claims. Clarification accuracy measures the query-versus-clarify decision; useful clarification wording additionally needs human review.
 

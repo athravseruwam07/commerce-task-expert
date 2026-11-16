@@ -119,3 +119,29 @@ def rows_equal(actual: list[dict], expected: list[dict], ordered: bool = False) 
 
     left, right = canonical(actual), canonical(expected)
     return left == right if ordered else Counter(left) == Counter(right)
+
+
+def results_equivalent(actual: list[dict], expected: list[dict], ordered: bool = False) -> bool:
+    """SQL denotation equality under column renaming/permutation, not SQL text matching.
+
+    The permutation is global across all rows, so columns cannot be swapped
+    independently per row. Benchmark results contain at most four columns.
+    """
+    from itertools import permutations
+
+    if len(actual) != len(expected):
+        return False
+    if not actual:
+        return True
+    actual_keys, expected_keys = list(actual[0]), list(expected[0])
+    if len(actual_keys) != len(expected_keys) or len(expected_keys) > 6:
+        return False
+    if any(list(row) != actual_keys for row in actual) or any(list(row) != expected_keys for row in expected):
+        return False
+    for assignment in permutations(actual_keys):
+        renamed = [
+            {target: row[source] for source, target in zip(assignment, expected_keys)} for row in actual
+        ]
+        if rows_equal(renamed, expected, ordered):
+            return True
+    return False

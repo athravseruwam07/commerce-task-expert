@@ -10,7 +10,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from commerce_expert.query import execute_readonly, parse_prediction, rows_equal
+from commerce_expert.query import execute_readonly, parse_prediction, results_equivalent
 
 
 def read_jsonl(path: Path) -> list[dict]:
@@ -50,7 +50,7 @@ def evaluate_prediction(case: dict, prediction: dict, data_dir: Path) -> dict:
                 raise ValueError("Database path escapes dataset directory")
             result["rows"] = execute_readonly(db, parsed["sql"])
             result["execution_success"] = True
-            result["correct"] = case["expected_action"] == "query" and rows_equal(
+            result["correct"] = case["expected_action"] == "query" and results_equivalent(
                 result["rows"], case["expected_rows"], case.get("ordered", False)
             )
     except Exception as exc:
@@ -136,6 +136,16 @@ def run_evaluation(
 
     test_path = Path(data_dir) / "test.jsonl"
     cases = select_cases(read_jsonl(test_path), limit)
+    frozen = Path(__file__).resolve().parents[1] / "configs/evaluation.json"
+    if frozen.exists() and limit == 60:
+        protocol = json.loads(frozen.read_text())
+        if protocol["test_sha256"] != hashlib.sha256(test_path.read_bytes()).hexdigest():
+            raise ValueError("Dataset hash differs from the published frozen pilot")
+        if protocol["case_ids"] != [case["id"] for case in cases]:
+            raise ValueError("Pilot selection differs from the frozen case IDs")
+        if max_tokens != protocol["max_tokens"]:
+            raise ValueError("Pilot output cap differs from frozen protocol")
+
     model = MLXModel(ModelConfig(model_path=str(model_path), max_tokens=max_tokens))
     # Warm up on validation only, so timing excludes model load and first compilation.
     valid = read_jsonl(Path(data_dir) / "valid.jsonl")
@@ -182,6 +192,11 @@ def run_evaluation(
     summary["case_ids"] = [case["id"] for case in cases]
     summary["model_path"] = str(model_path)
     summary["max_tokens"] = max_tokens
+    summary["model_weight_bytes"] = sum(p.stat().st_size for p in Path(model_path).glob("*.safetensors"))
+    summary["prompt_code_sha256"] = hashlib.sha256(
+        (Path(__file__).parent / "model.py").read_bytes()
+    ).hexdigest()
+    summary["evaluation_code_sha256"] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     path = Path(reports_dir) / f"{variant}.json"
     path.write_text(json.dumps(summary, indent=2))
     merge_reports(reports_dir)

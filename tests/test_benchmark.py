@@ -39,6 +39,7 @@ def test_manifest_hashes_and_case_contract(dataset):
             assert case["schema"] and case["policy"]
             if case["expected_action"] == "query":
                 assert case["reference_sql"] and case["output_columns"]
+                assert case["expected_rows"], "Nonempty gold rows prevent trivial empty-query acceptance"
                 assert (
                     set(case["output_columns"]) == set(case["expected_rows"][0])
                     if case["expected_rows"]
