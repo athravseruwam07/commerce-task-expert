@@ -24,8 +24,7 @@ def render_messages(case: dict[str, Any]) -> list[dict[str, str]]:
             f"Schema:\n{case['schema']}\n\n"
             f"As of (UTC): {case['as_of_date']}\n\n"
             f"Business policy:\n{case['policy']}\n\n"
-            f"Merchant question: {case['question']}\n"
-            f"Required result columns: {', '.join(case.get('output_columns', [])) or 'Choose clear aliases'}"
+            f"Merchant question: {case['question']}"
         )},
     ]
 
