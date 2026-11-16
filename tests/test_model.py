@@ -2,7 +2,17 @@ from commerce_expert.model import ModelConfig, render_messages, render_prompt
 
 
 def test_gold_never_leaks_into_prompt():
-    case = {"question": "How much stock?", "schema": "CREATE TABLE inventory(qty INTEGER);", "as_of_date": "2026-01-01", "policy": "UTC", "reference_sql": "SECRET_GOLD_QUERY", "expected_rows": [{"SECRET_ANSWER": 777}], "expected_action": "query", "pattern_id": "secret_pattern", "output_columns": ["SECRET_OUTPUT_COLUMN"]}
+    case = {
+        "question": "How much stock?",
+        "schema": "CREATE TABLE inventory(qty INTEGER);",
+        "as_of_date": "2026-01-01",
+        "policy": "UTC",
+        "reference_sql": "SECRET_GOLD_QUERY",
+        "expected_rows": [{"SECRET_ANSWER": 777}],
+        "expected_action": "query",
+        "pattern_id": "secret_pattern",
+        "output_columns": ["SECRET_OUTPUT_COLUMN"],
+    }
     prompt = render_prompt(case)
     assert "How much stock?" in prompt
     for secret in ("SECRET_GOLD_QUERY", "SECRET_ANSWER", "secret_pattern", "SECRET_OUTPUT_COLUMN", "777"):
@@ -41,9 +51,17 @@ def test_training_preparation_never_converts_test_labels(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, "transformers", SimpleNamespace(AutoTokenizer=fake_auto))
     source = tmp_path / "source"
     source.mkdir()
-    case = {"id": "case", "question": "Stock?", "schema": "SCHEMA", "as_of_date": "2026-01-01", "policy": "POLICY", "expected_action": "query", "reference_sql": "SELECT 1;"}
+    case = {
+        "id": "case",
+        "question": "Stock?",
+        "schema": "SCHEMA",
+        "as_of_date": "2026-01-01",
+        "policy": "POLICY",
+        "expected_action": "query",
+        "reference_sql": "SELECT 1;",
+    }
     for split in ("train", "valid"):
-        (source / f"{split}.jsonl").write_text(json.dumps(case)+"\n")
+        (source / f"{split}.jsonl").write_text(json.dumps(case) + "\n")
     (source / "test.jsonl").write_text("INVALID_TEST_DATA_MUST_NOT_BE_READ")
     stats = module.prepare_data(source, tmp_path / "output", tmp_path / "model", 10000)
     assert stats["train"]["count"] == 1
@@ -62,8 +80,13 @@ def test_training_curve_parses_rounded_console_records(tmp_path):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     log = tmp_path / "training.log"
-    log.write_text("Trainable parameters: 0.085%\n 1 val \x1b[1m0.798\x1b[0m 6.88s\n 10 \x1b[1m0.578 ▼\x1b[0m 64 0.9k\n")
-    assert module.extract_curve(log) == [{"step": 1, "validation_loss": 0.798, "validation_seconds": 6.88}, {"step": 10, "train_loss": 0.578}]
+    log.write_text(
+        "Trainable parameters: 0.085%\n 1 val \x1b[1m0.798\x1b[0m 6.88s\n 10 \x1b[1m0.578 ▼\x1b[0m 64 0.9k\n"
+    )
+    assert module.extract_curve(log) == [
+        {"step": 1, "validation_loss": 0.798, "validation_seconds": 6.88},
+        {"step": 10, "train_loss": 0.578},
+    ]
 
 
 def test_checkpoint_selection_uses_only_validation_and_picks_earliest_loss_tie(tmp_path, monkeypatch):
@@ -76,7 +99,9 @@ def test_checkpoint_selection_uses_only_validation_and_picks_earliest_loss_tie(t
     monkeypatch.setattr(module, "ROOT", tmp_path)
     dataset = tmp_path / "dataset"
     (dataset / "mlx").mkdir(parents=True)
-    (dataset / "valid.jsonl").write_text('\n'.join(json.dumps({"id": f"valid{i}", "pattern_id": f"pattern{i}"}) for i in range(2))+"\n")
+    (dataset / "valid.jsonl").write_text(
+        "\n".join(json.dumps({"id": f"valid{i}", "pattern_id": f"pattern{i}"}) for i in range(2)) + "\n"
+    )
     (dataset / "test.jsonl").write_text("INVALID_TEST_MUST_NOT_BE_READ")
     (dataset / "mlx/valid.jsonl").write_text('{"messages": ["validation0"]}\n{"messages": ["validation1"]}\n')
     adapters = tmp_path / "models/adapters"

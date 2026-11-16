@@ -3,6 +3,7 @@
 MLX imports are deliberately lazy: data generation, tests and the demo's recorded
 runs remain usable on Linux without Apple Metal.
 """
+
 from __future__ import annotations
 
 import time
@@ -10,22 +11,25 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-SYSTEM_PROMPT = '''You are a commerce analytics SQL specialist. Use SQLite and the supplied schema and business policy. Return exactly one JSON object, no markdown or explanation.
+SYSTEM_PROMPT = """You are a commerce analytics SQL specialist. Use SQLite and the supplied schema and business policy. Return exactly one JSON object, no markdown or explanation.
 If the question is answerable: {"action":"query","sql":"SELECT ..."}.
 If an essential metric or period is ambiguous and the policy does not resolve it: {"action":"clarify","question":"A short specific clarifying question"}.
-Generate a single read-only query. Do not invent columns. Use explicit output aliases, deterministic ordering and the dates supplied.''' 
+Generate a single read-only query. Do not invent columns. Use explicit output aliases, deterministic ordering and the dates supplied."""
 
 
 def render_messages(case: dict[str, Any]) -> list[dict[str, str]]:
     """Construct inputs exclusively from merchant-visible context, never gold labels."""
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": (
-            f"Schema:\n{case['schema']}\n\n"
-            f"As of (UTC): {case['as_of_date']}\n\n"
-            f"Business policy:\n{case['policy']}\n\n"
-            f"Merchant question: {case['question']}"
-        )},
+        {
+            "role": "user",
+            "content": (
+                f"Schema:\n{case['schema']}\n\n"
+                f"As of (UTC): {case['as_of_date']}\n\n"
+                f"Business policy:\n{case['policy']}\n\n"
+                f"Merchant question: {case['question']}"
+            ),
+        },
     ]
 
 
@@ -44,6 +48,7 @@ class ModelConfig:
 
 class MLXModel:
     """Load exactly one model and measure uncached, greedy, single-request inference."""
+
     def __init__(self, config: ModelConfig):
         import mlx.core as mx
         from mlx_lm import load
@@ -69,7 +74,9 @@ class MLXModel:
         mx.clear_cache()
         mx.reset_peak_memory()
         prompt = self.tokenizer.apply_chat_template(
-            render_messages(case), tokenize=False, add_generation_prompt=True,
+            render_messages(case),
+            tokenize=False,
+            add_generation_prompt=True,
         )
         prompt_tokens = len(self.tokenizer.encode(prompt))
         chunks = []
@@ -77,8 +84,11 @@ class MLXModel:
         first_token_ms = None
         start = time.perf_counter()
         for response in stream_generate(
-            self.model, self.tokenizer, prompt=prompt,
-            max_tokens=self.config.max_tokens, sampler=make_sampler(temp=0.0),
+            self.model,
+            self.tokenizer,
+            prompt=prompt,
+            max_tokens=self.config.max_tokens,
+            sampler=make_sampler(temp=0.0),
             prefill_step_size=256,
         ):
             if first_token_ms is None:
