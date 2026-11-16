@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "commerce-task-expert"
+version = "0.1.0"
+description = "A local commerce SQL task expert with leakage-resistant evaluation on Apple silicon"
+requires-python = ">=3.11"
+dependencies = ["sqlglot>=26", "pydantic>=2", "typer>=0.15", "rich>=13", "pandas>=2", "streamlit>=1.40", "pyyaml>=6"]
+
+[project.optional-dependencies]
+ml = ["mlx-lm>=0.29", "huggingface-hub>=0.30"]
+dev = ["pytest>=8", "ruff>=0.9"]
+
+[project.scripts]
+commerce = "commerce_expert.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["commerce_expert*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 110

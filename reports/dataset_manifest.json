@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "seed": 42,
+  "scale": "small",
+  "as_of_date": "2026-10-01",
+  "stores": [
+    {
+      "store_id": "store_01",
+      "seed": 4201,
+      "products": 24,
+      "variants": 48,
+      "orders": 1923,
+      "items": 3900,
+      "returns": 233
+    },
+    {
+      "store_id": "store_02",
+      "seed": 4202,
+      "products": 24,
+      "variants": 48,
+      "orders": 2247,
+      "items": 4390,
+      "returns": 626
+    },
+    {
+      "store_id": "store_03",
+      "seed": 4203,
+      "products": 24,
+      "variants": 48,
+      "orders": 2143,
+      "items": 4301,
+      "returns": 613
+    },
+    {
+      "store_id": "store_04",
+      "seed": 4204,
+      "products": 24,
+      "variants": 48,
+      "orders": 1943,
+      "items": 3926,
+      "returns": 403
+    },
+    {
+      "store_id": "store_05",
+      "seed": 4205,
+      "products": 24,
+      "variants": 48,
+      "orders": 2143,
+      "items": 4269,
+      "returns": 563
+    },
+    {
+      "store_id": "store_06",
+      "seed": 4206,
+      "products": 24,
+      "variants": 48,
+      "orders": 1744,
+      "items": 3488,
+      "returns": 269
+    },
+    {
+      "store_id": "store_07",
+      "seed": 4207,
+      "products": 24,
+      "variants": 48,
+      "orders": 1935,
+      "items": 3900,
+      "returns": 188
+    },
+    {
+      "store_id": "store_08",
+      "seed": 4208,
+      "products": 24,
+      "variants": 48,
+      "orders": 1644,
+      "items": 3234,
+      "returns": 317
+    },
+    {
+      "store_id": "store_09",
+      "seed": 4209,
+      "products": 24,
+      "variants": 48,
+      "orders": 2286,
+      "items": 4552,
+      "returns": 310
+    },
+    {
+      "store_id": "store_10",
+      "seed": 4210,
+      "products": 24,
+      "variants": 48,
+      "orders": 2186,
+      "items": 4375,
+      "returns": 585
+    },
+    {
+      "store_id": "store_11",
+      "seed": 4211,
+      "products": 24,
+      "variants": 48,
+      "orders": 1609,
+      "items": 3238,
+      "returns": 491
+    },
+    {
+      "store_id": "store_12",
+      "seed": 4212,
+      "products": 24,
+      "variants": 48,
+      "orders": 2183,
+      "items": 4413,
+      "returns": 615
+    },
+    {
+      "store_id": "store_13",
+      "seed": 4213,
+      "products": 24,
+      "variants": 48,
+      "orders": 1815,
+      "items": 3625,
+      "returns": 451
+    },
+    {
+      "store_id": "store_14",
+      "seed": 4214,
+      "products": 24,
+      "variants": 48,
+      "orders": 2151,
+      "items": 4302,
+      "returns": 586
+    },
+    {
+      "store_id": "store_15",
+      "seed": 4215,
+      "products": 24,
+      "variants": 48,
+      "orders": 2026,
+      "items": 4046,
+      "returns": 398
+    },
+    {
+      "store_id": "store_16",
+      "seed": 4216,
+      "products": 24,
+      "variants": 48,
+      "orders": 2075,
+      "items": 4123,
+      "returns": 499
+    },
+    {
+      "store_id": "store_17",
+      "seed": 4217,
+      "products": 24,
+      "variants": 48,
+      "orders": 1924,
+      "items": 3865,
+      "returns": 456
+    },
+    {
+      "store_id": "store_18",
+      "seed": 4218,
+      "products": 24,
+      "variants": 48,
+      "orders": 1703,
+      "items": 3320,
+      "returns": 263
+    },
+    {
+      "store_id": "store_19",
+      "seed": 4219,
+      "products": 24,
+      "variants": 48,
+      "orders": 2273,
+      "items": 4550,
+      "returns": 431
+    },
+    {
+      "store_id": "store_20",
+      "seed": 4220,
+      "products": 24,
+      "variants": 48,
+      "orders": 1890,
+      "items": 3755,
+      "returns": 474
+    }
+  ],
+  "counts": {
+    "train": 2000,
+    "valid": 160,
+    "test": 240
+  },
+  "sha256": {
+    "train": "a9e5922e8cb15ff8342e07bc05cf09b00006e44c4ec499594d57b972f52eed26",
+    "valid": "0e6ea3957b87c8366b946be9562eecc8fc39260f2bb3b1406fa1ef51e8f88ea9",
+    "test": "4c5f08cdf0075ad40ea27e71754e4c7cc2529a87be17636675a8a402e625ec45"
+  },
+  "slice_counts": {
+    "train": {
+      "train": 2000
+    },
+    "valid": {
+      "validation_unseen_store": 160
+    },
+    "test": {
+      "unseen_store": 60,
+      "unseen_pattern": 60,
+      "unseen_both": 60,
+      "ambiguous": 60
+    }
+  },
+  "train_stores": [
+    "store_01",
+    "store_02",
+    "store_03",
+    "store_04",
+    "store_05",
+    "store_06",
+    "store_07",
+    "store_08",
+    "store_09",
+    "store_10",
+    "store_11",
+    "store_12"
+  ],
+  "valid_stores": [
+    "store_13",
+    "store_14",
+    "store_15",
+    "store_16"
+  ],
+  "test_stores": [
+    "store_17",
+    "store_18",
+    "store_19",
+    "store_20"
+  ],
+  "train_patterns": [
+    "sales_units",
+    "top_revenue",
+    "low_stock",
+    "no_sales",
+    "return_units",
+    "stockout",
+    "product_sales",
+    "category_revenue",
+    "daily_revenue",
+    "return_rate",
+    "net_revenue"
+  ],
+  "heldout_patterns": [
+    "low_stock_bestsellers",
+    "category_return_rate",
+    "momentum"
+  ],
+  "scope": "Fixed-schema synthetic data and compositional generalization; not unseen-schema evaluation."
+}

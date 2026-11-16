@@ -1,0 +1,12 @@
+name: Checks
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --extra dev --locked
+      - run: uv run pytest -q
+      - run: uv run ruff check commerce_expert tests scripts app.py
+      - run: uv run commerce generate --data-dir data/generated

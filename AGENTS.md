@@ -1,0 +1,2 @@
+# Development contract
+Work only in the requested repository. No credentials or real merchant data. Keep synthetic data reproducible. Report actual model measurements; never substitute oracle SQL for model output. Test split is immutable after tuning begins. ML runs are local only. Use independent Python oracles to verify benchmark reference SQL. Pin the resolved environment with uv.lock. Do not commit model weights or generated databases.
