@@ -1,0 +1,128 @@
+{
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "precision": "float16",
+  "training": "LoRA (not QLoRA)",
+  "iters": 300,
+  "seed": 42,
+  "dataset": {
+    "train": {
+      "count": 2000,
+      "max_tokens": 856,
+      "sha256": "a9e5922e8cb15ff8342e07bc05cf09b00006e44c4ec499594d57b972f52eed26",
+      "chat_sha256": "dca7e5fd158a187c1173f40c9d036e95c1ab60038b3dbf780e49d460127523e5"
+    },
+    "valid": {
+      "count": 160,
+      "max_tokens": 855,
+      "sha256": "0e6ea3957b87c8366b946be9562eecc8fc39260f2bb3b1406fa1ef51e8f88ea9",
+      "chat_sha256": "b9d143b8ee2931baaf27d053b5b99aaada1607b58322a742012a4b5ef2dfa536"
+    }
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+  "python": "3.13.5",
+  "versions": {
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.2",
+    "transformers": "5.23.0"
+  },
+  "effective_config": {
+    "model": "/Users/athravseruwam/dev/commerce-task-expert/models/base",
+    "train": true,
+    "fine_tune_type": "lora",
+    "data": "/Users/athravseruwam/dev/commerce-task-expert/data/generated/mlx",
+    "adapter_path": "models/adapters",
+    "seed": 42,
+    "num_layers": 4,
+    "batch_size": 1,
+    "iters": 300,
+    "learning_rate": 0.0002,
+    "steps_per_report": 10,
+    "steps_per_eval": 100,
+    "val_batches": 8,
+    "save_every": 100,
+    "max_seq_length": 1024,
+    "grad_checkpoint": true,
+    "mask_prompt": true,
+    "lora_parameters": {
+      "rank": 8,
+      "dropout": 0.0,
+      "scale": 16.0
+    }
+  },
+  "base_config_sha256": "08971621b6348df004cf6ab1b743d6967a808519aa2b44767c4876537d2624dc",
+  "source_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "status": "complete",
+  "training_seconds": 366.31838754203636,
+  "checkpoint_selection": {
+    "criterion": "Minimum completion-only cross-entropy on the same fixed, pattern-stratified 40 validation cases; console losses rounded to 3 decimals; ties choose earliest checkpoint",
+    "selected_iteration": 200,
+    "validation_case_ids": [
+      "valid_0089",
+      "valid_0150",
+      "valid_0140",
+      "valid_0046",
+      "valid_0087",
+      "valid_0058",
+      "valid_0127",
+      "valid_0086",
+      "valid_0037",
+      "valid_0033",
+      "valid_0060",
+      "valid_0078",
+      "valid_0149",
+      "valid_0084",
+      "valid_0030",
+      "valid_0002",
+      "valid_0065",
+      "valid_0102",
+      "valid_0017",
+      "valid_0130",
+      "valid_0004",
+      "valid_0121",
+      "valid_0082",
+      "valid_0100",
+      "valid_0069",
+      "valid_0007",
+      "valid_0041",
+      "valid_0145",
+      "valid_0010",
+      "valid_0124",
+      "valid_0050",
+      "valid_0141",
+      "valid_0136",
+      "valid_0143",
+      "valid_0005",
+      "valid_0056",
+      "valid_0029",
+      "valid_0073",
+      "valid_0085",
+      "valid_0090"
+    ],
+    "candidates": [
+      {
+        "step": 100,
+        "validation_completion_loss": 0.114
+      },
+      {
+        "step": 200,
+        "validation_completion_loss": 0.069
+      },
+      {
+        "step": 300,
+        "validation_completion_loss": 0.337
+      }
+    ],
+    "test_used": false
+  },
+  "wall_seconds": 473.8138832920231,
+  "frozen_base_precision": "float16",
+  "adapter_precision": "float32",
+  "fused_checkpoint_precision": "float16",
+  "updates_per_epoch": 2000,
+  "selected_updates": 200,
+  "selected_epochs_equivalent": 0.1,
+  "training_budget_epochs_equivalent": 0.15,
+  "fused_safetensor_dtypes": [
+    "F16"
+  ]
+}

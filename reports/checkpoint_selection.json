@@ -1,0 +1,61 @@
+{
+  "criterion": "Minimum completion-only cross-entropy on the same fixed, pattern-stratified 40 validation cases; console losses rounded to 3 decimals; ties choose earliest checkpoint",
+  "selected_iteration": 200,
+  "validation_case_ids": [
+    "valid_0089",
+    "valid_0150",
+    "valid_0140",
+    "valid_0046",
+    "valid_0087",
+    "valid_0058",
+    "valid_0127",
+    "valid_0086",
+    "valid_0037",
+    "valid_0033",
+    "valid_0060",
+    "valid_0078",
+    "valid_0149",
+    "valid_0084",
+    "valid_0030",
+    "valid_0002",
+    "valid_0065",
+    "valid_0102",
+    "valid_0017",
+    "valid_0130",
+    "valid_0004",
+    "valid_0121",
+    "valid_0082",
+    "valid_0100",
+    "valid_0069",
+    "valid_0007",
+    "valid_0041",
+    "valid_0145",
+    "valid_0010",
+    "valid_0124",
+    "valid_0050",
+    "valid_0141",
+    "valid_0136",
+    "valid_0143",
+    "valid_0005",
+    "valid_0056",
+    "valid_0029",
+    "valid_0073",
+    "valid_0085",
+    "valid_0090"
+  ],
+  "candidates": [
+    {
+      "step": 100,
+      "validation_completion_loss": 0.114
+    },
+    {
+      "step": 200,
+      "validation_completion_loss": 0.069
+    },
+    {
+      "step": 300,
+      "validation_completion_loss": 0.337
+    }
+  ],
+  "test_used": false
+}

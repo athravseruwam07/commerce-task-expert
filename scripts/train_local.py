@@ -233,6 +233,9 @@ def main() -> None:
     metadata = {
         "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
         "precision": "float16",
+        "frozen_base_precision": "float16",
+        "adapter_precision": "float32",
+        "fused_checkpoint_precision": "float16",
         "training": "LoRA (not QLoRA)",
         "iters": args.iters,
         "seed": 42,

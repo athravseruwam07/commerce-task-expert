@@ -9,6 +9,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from threading import Lock
 from typing import Any
 
 SYSTEM_PROMPT = """You are a commerce analytics SQL specialist. Use SQLite and the supplied schema and business policy. Return exactly one JSON object, no markdown or explanation.
@@ -54,6 +55,7 @@ class MLXModel:
         from mlx_lm import load
 
         self.config = config
+        self._lock = Lock()
         self.mx = mx
         kwargs = {}
         if config.adapter_path is not None:
@@ -65,6 +67,11 @@ class MLXModel:
         self.load_ms = (time.perf_counter() - start) * 1000
 
     def generate(self, case: dict[str, Any]) -> dict[str, Any]:
+        # MLX allocator statistics and the model are shared between demo sessions.
+        with self._lock:
+            return self._generate(case)
+
+    def _generate(self, case: dict[str, Any]) -> dict[str, Any]:
         from mlx_lm import stream_generate
         from mlx_lm.sample_utils import make_sampler
 

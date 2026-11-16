@@ -71,7 +71,7 @@ Restoration downloads the exact pinned public base revision if needed, verifies 
 
 ## Results and interpretation
 
-Measured runs are saved in [reports](reports/) with one raw record per question, SQL, returned rows, expected rows, correctness, timing and errors. [RESULTS.md](reports/RESULTS.md) is generated from these records; [summary.json](reports/summary.json) contains machine-readable aggregates. Training and quantization metadata record configuration, dataset hashes, source revision, package versions and model sizes.
+Measured runs are saved in [reports](reports/) with one raw record per question, SQL, returned rows, expected rows, correctness, timing and errors. [RESULTS.md](reports/RESULTS.md) is generated from these records; [summary.json](reports/summary.json) contains machine-readable aggregates. Training and quantization metadata record configuration, dataset hashes, source revision, package versions and model sizes. The training search ran 300 batch-size-1 updates (about 0.15 epoch); validation selected the checkpoint at update 200 (about 0.10 epoch).
 
 **Execution success alone is not correctness.** A valid SQL query can use the wrong dates, double-count joins, omit cancelled-order filtering, or confuse product and variant aggregation. Scoring compares actual results with independently computed expected rows, including ordering, ties, and numeric tolerance. A single global column permutation allows equivalent aliases and column order without exposing expected output columns to the model.
 

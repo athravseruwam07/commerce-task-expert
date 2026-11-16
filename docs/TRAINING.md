@@ -9,8 +9,8 @@ From the repository root on Apple silicon with Python 3.11 or newer:
 ```sh
 uv sync --extra ml --extra dev
 uv run commerce generate
-uv run python scripts/train_local.py --iters 300
-uv run python scripts/quantize_local.py
+uv run --extra ml python scripts/train_local.py --iters 300
+uv run --extra ml python scripts/quantize_local.py
 ```
 
 The data-generation command and full benchmark commands are documented in the repository README. `train_local.py` converts the base checkpoint if needed, reads **only train and validation cases**, constructs the same chat prompt used at inference, verifies every complete prompt-plus-answer fits the configured sequence length, and trains with prompt masking. It refuses to truncate targets. The test set is never converted into training examples.
@@ -27,7 +27,7 @@ The script saves a LoRA adapter under `models/adapters` and fuses it with the or
 
 After the fixed 300-step budget, checkpoints at steps 100, 200 and 300 are compared by completion-only cross-entropy on the same 40 validation examples, sampled deterministically across pattern families. The minimum rounded loss wins; ties choose the earlier step. This selection never reads benchmark test examples. `reports/checkpoint_selection.json` records the IDs, candidate scores and chosen iteration. The final adapter is fused only after selection.
 
-Training is **LoRA on a floating-point base**, not QLoRA. Keeping this distinction allows the fine-tuned FP16 versus quantized comparison to isolate post-training quantization. The initial small configuration trains rank-8 adapters on the final four transformer layers with batch size 1, gradient checkpointing, seed 42 and completion-only loss. `configs/lora.yaml` is the source of truth.
+Training is **LoRA on a floating-point base**, not QLoRA. The frozen base is FP16; LoRA trainable arrays are FP32 and are merged back into FP16 for the controlled inference comparison. The 300-update, batch-size-1 run consumes approximately 0.15 of a 2,000-example training epoch. Keeping this distinction allows the fine-tuned FP16 versus quantized comparison to isolate post-training quantization. The initial small configuration trains rank-8 adapters on the final four transformer layers with batch size 1, gradient checkpointing, seed 42 and completion-only loss. `configs/lora.yaml` is the source of truth.
 
 ## Measurement
 

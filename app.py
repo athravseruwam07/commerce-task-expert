@@ -153,6 +153,7 @@ def main() -> None:
     st.title("Know your store. See the work.")
     st.markdown('<div class="intro">Ask a merchant question and follow the answer from generated SQL to returned data. Compare what specialization improves—and what compression costs.</div>', unsafe_allow_html=True)
     st.markdown('<span class="badge">Apple silicon</span><span class="badge">SQL specialist</span><span class="badge">Verified benchmark</span>', unsafe_allow_html=True)
+    st.caption("Synthetic store snapshot · October 1, 2026 · UTC · All question dates use this snapshot.")
     st.write("")
     ask, experiments, methodology = st.tabs(["Ask your store", "Experiment results", "How it works"])
     with ask:

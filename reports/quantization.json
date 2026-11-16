@@ -1,0 +1,24 @@
+{
+  "source": "models/fine_tuned",
+  "output": "models/quantized",
+  "bits": 4,
+  "group_size": 64,
+  "method": "MLX affine weight-only quantization",
+  "wall_seconds": 3.523951333016157,
+  "artifacts": {
+    "model.safetensors": 868628547,
+    "tokenizer_config.json": 728,
+    "config.json": 948,
+    "tokenizer.json": 11421892,
+    "generation_config.json": 242,
+    "README.md": 81,
+    "chat_template.jinja": 2507,
+    "model.safetensors.index.json": 51609
+  },
+  "source_weights_sha256": {
+    "model.safetensors": "5fb48bc1fbb545986f2cd861d298585034d0edf197b59be7c489f3cd8ca9c4f5"
+  },
+  "quantized_weights_sha256": {
+    "model.safetensors": "09b03fc225e667d52f38bbf828340fe1a6f56c278f41dad054d575c3336f3f44"
+  }
+}

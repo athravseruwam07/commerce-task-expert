@@ -1,0 +1,64 @@
+{
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "precision": "float16",
+  "training": "LoRA (not QLoRA)",
+  "iters": 300,
+  "seed": 42,
+  "dataset": {
+    "train": {
+      "count": 2000,
+      "max_tokens": 871,
+      "sha256": "a9e5922e8cb15ff8342e07bc05cf09b00006e44c4ec499594d57b972f52eed26"
+    },
+    "valid": {
+      "count": 160,
+      "max_tokens": 868,
+      "sha256": "0e6ea3957b87c8366b946be9562eecc8fc39260f2bb3b1406fa1ef51e8f88ea9"
+    }
+  },
+  "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O",
+  "python": "3.13.5",
+  "versions": {
+    "mlx": "0.32.4",
+    "mlx-lm": "0.32.2",
+    "transformers": "5.23.0"
+  },
+  "effective_config": {
+    "model": "/Users/athravseruwam/dev/commerce-task-expert/models/base",
+    "train": true,
+    "fine_tune_type": "lora",
+    "data": "/Users/athravseruwam/dev/commerce-task-expert/data/generated/mlx",
+    "adapter_path": "models/adapters",
+    "seed": 42,
+    "num_layers": 4,
+    "batch_size": 1,
+    "iters": 300,
+    "learning_rate": 0.0002,
+    "steps_per_report": 10,
+    "steps_per_eval": 100,
+    "val_batches": 8,
+    "save_every": 100,
+    "max_seq_length": 1024,
+    "grad_checkpoint": true,
+    "mask_prompt": true,
+    "lora_parameters": {
+      "rank": 8,
+      "dropout": 0.0,
+      "scale": 16.0
+    }
+  },
+  "base_config_sha256": "08971621b6348df004cf6ab1b743d6967a808519aa2b44767c4876537d2624dc",
+  "source_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "status": "discarded",
+  "reason": "Prompt exposed output_columns: nonempty for query vs empty for clarification leaked the gold action. Stopped at approximately 100 iterations; none of these adapters are used in final experiment.",
+  "last_training_lines": [
+    "    60    \u001b[1m0.383 \u25bc\u001b[0m    \u001b[1m  103\u001b[0m      6.0k",
+    "    70    \u001b[1m0.250 \u25bc\u001b[0m    \u001b[1m  101\u001b[0m      7.2k",
+    "    80    \u001b[1m0.167 \u25bc\u001b[0m    \u001b[1m  121\u001b[0m      8.7k",
+    "    90    \u001b[1m0.113 \u25bc\u001b[0m    \u001b[1m  113\u001b[0m     10.1k",
+    "   100    \u001b[1mval\u001b[0m \u001b[1m0.109\u001b[0m    6.27s",
+    "   100    \u001b[1m0.089 \u25bc\u001b[0m    \u001b[1m   90\u001b[0m     11.1k",
+    "  \u001b[1msave\u001b[0m  0000100_adapters.safetensors",
+    "   110    \u001b[1m0.151 \u25b2\u001b[0m    \u001b[1m   96\u001b[0m     12.2k"
+  ]
+}
