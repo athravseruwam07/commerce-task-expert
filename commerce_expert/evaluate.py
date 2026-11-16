@@ -203,6 +203,26 @@ def run_evaluation(
     return summary
 
 
+def hardware_info() -> dict:
+    import os
+    import subprocess
+
+    chip = platform.processor() or platform.machine()
+    memory = None
+    if platform.system() == "Darwin":
+        chip = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"], text=True).strip()
+        memory = int(subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True).strip())
+    elif hasattr(os, "sysconf"):
+        memory = os.sysconf("SC_PHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+    return {
+        "platform": platform.platform(),
+        "machine": platform.machine(),
+        "chip": chip,
+        "physical_memory_bytes": memory,
+        "unified_memory_gb": round(memory / 1024**3, 2) if memory and platform.system() == "Darwin" else None,
+    }
+
+
 def merge_reports(reports_dir: Path) -> dict:
     runs = []
     for variant in ["base", "fine_tuned", "quantized"]:
@@ -211,12 +231,7 @@ def merge_reports(reports_dir: Path) -> dict:
             runs.append(json.loads(path.read_text()))
     value = {
         "runs": runs,
-        "hardware": {
-            "platform": platform.platform(),
-            "machine": platform.machine(),
-            "chip": "Apple M4",
-            "unified_memory_gb": 16,
-        },
+        "hardware": hardware_info(),
         "protocol": {
             "decoding": "greedy, first attempt, no repair",
             "batch_size": 1,

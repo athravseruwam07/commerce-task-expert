@@ -54,6 +54,21 @@ Each evaluation is a separate process. Use the **same limit and token cap for al
 uv run commerce ask "Which variants will run out within 7 days based on paid unit sales during the last 14 days?" --store store_17 --variant quantized
 ```
 
+## Use the released adapter without retraining
+
+The private GitHub release contains the selected adapter and checksums, not multi-gigabyte model weights. With GitHub CLI authenticated to this repository:
+
+```sh
+mkdir -p work
+gh release download v1.0.0 --pattern commerce-adapter-v1.tar.gz --dir work
+uv sync --extra ml --extra dev --locked
+uv run commerce generate
+uv run python scripts/restore_adapter.py work/commerce-adapter-v1.tar.gz
+uv run streamlit run app.py
+```
+
+Restoration downloads the exact pinned public base revision if needed, verifies adapter checksums, fuses locally, and creates the 4-bit model. It leaves the published training report intact. Model files remain ignored by Git.
+
 ## Results and interpretation
 
 Measured runs are saved in [reports](reports/) with one raw record per question, SQL, returned rows, expected rows, correctness, timing and errors. [RESULTS.md](reports/RESULTS.md) is generated from these records; [summary.json](reports/summary.json) contains machine-readable aggregates. Training and quantization metadata record configuration, dataset hashes, source revision, package versions and model sizes.
