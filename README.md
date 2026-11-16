@@ -46,6 +46,8 @@ uv run commerce evaluate quantized --limit 60
 uv run python scripts/analyze_results.py
 ```
 
+For the same sequence in one command, use `uv run --extra ml python scripts/run_experiment.py`. Add `--skip-training` to reuse checkpoints or `--full` to write the complete 240-case comparison under `reports/full`.
+
 Each evaluation is a separate process. Use the **same limit and token cap for all three**. The 60-case pilot is deterministically balanced across the four test slices and cycles through each slice's patterns. To evaluate the entire 240-case benchmark, omit `--limit 60` for all three runs and write them to a separate `--reports-dir reports/full` to preserve the published pilot. Do not tune on either test run. The complete baseline / fine-tune / quantization workflow is in [training documentation](docs/TRAINING.md).
 
 ```sh

@@ -25,6 +25,8 @@ The script saves a LoRA adapter under `models/adapters` and fuses it with the or
 | Fine-tuned | FP16 | LoRA merged into the base |
 | Quantized fine-tuned | Mixed: eligible matrices 4-bit, remaining parameters FP16 | Same merged LoRA checkpoint |
 
+After the fixed 300-step budget, checkpoints at steps 100, 200 and 300 are compared by completion-only cross-entropy on the same 40 validation examples, sampled deterministically across pattern families. The minimum rounded loss wins; ties choose the earlier step. This selection never reads benchmark test examples. `reports/checkpoint_selection.json` records the IDs, candidate scores and chosen iteration. The final adapter is fused only after selection.
+
 Training is **LoRA on a floating-point base**, not QLoRA. Keeping this distinction allows the fine-tuned FP16 versus quantized comparison to isolate post-training quantization. The initial small configuration trains rank-8 adapters on the final four transformer layers with batch size 1, gradient checkpointing, seed 42 and completion-only loss. `configs/lora.yaml` is the source of truth.
 
 ## Measurement
